@@ -3,14 +3,16 @@ var EventEmitter = require("events").EventEmitter,
 
 var _ = require("lodash");
 
-var VirtualMachine = function(display) {
+var VirtualMachine = function() {
   EventEmitter.call(this);
 
   this.clockSpeed = 100; // Hz
-  this.display = display;
   this.memory = new Uint8Array(new ArrayBuffer(4096)); // 4k memory
   this.I = 0;
   this.V = new Uint8Array(new ArrayBuffer(16));
+  this.display = _.times(64, function() {
+    return _.times(32, _.constant(0));
+  });
 };
 
 util.inherits(VirtualMachine, EventEmitter);
@@ -83,15 +85,26 @@ VirtualMachine.prototype.execute = function(instruction) {
 };
 
 VirtualMachine.prototype.drawSprite = function(x, y, start, bytes) {
-  var collision = false;
+  var i, bit, collision = false;
 
-  for (var i = 0; i < bytes; i++) {
+  if (x > 64) {
+    x -= 64;
+  } else if (x < 0) {
+    x += 64;
+  }
+
+  if (y > 32) {
+    y -= 32;
+  } else if (y < 0) {
+    y += 32;
+  }
+
+  for (i = 0; i < bytes; i++) {
     var bits = this.memory[i + start];
-    for (var bit = 7; bit >= 0; bit--) {
+    for (bit = 7; bit >= 0; bit--) {
       if (bits & 1) {
-        if (!this.display.xorPixel(x + bit, y + i)) {
-          collision = true;
-        }
+        if (this.display[x + bit][y + i]) collision = true;
+        this.display[x + bit][y + i] ^= 1;
       }
 
       bits >>= 1;

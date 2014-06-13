@@ -3,8 +3,7 @@ require("./client/style.less");
 var React = require("react");
 
 var Computer = require("./client/components/computer.jsx"),
-    VirtualMachine = require("./client/models/virtual_machine.js"),
-    Display = require("./client/models/display");
+    VirtualMachine = require("./client/models/virtual_machine.js");
 
 var loadROM = function(name) {
   return new Promise(function(res, rej) {
@@ -20,7 +19,7 @@ var loadROM = function(name) {
   });
 };
 
-var vm = new VirtualMachine(new Display(64, 32, 10));
+var vm = new VirtualMachine();
 window.vm = vm;
 
 loadROM("MAZE").then(function(bytes) {

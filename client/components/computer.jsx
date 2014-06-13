@@ -10,9 +10,7 @@ var Computer = React.createClass({
     return (
       <div>
         <Display display={this.props.vm.display}
-                 width={this.props.vm.display.width}
-                 height={this.props.vm.display.height}
-                 ppp={this.props.vm.display.ppp} />
+                 ppp={10} />
         <div>
           <button onClick={this.handleRun}>Run</button>
           <button onClick={this.handleStop}>Stop</button>
