@@ -37,13 +37,16 @@ var Display = React.createClass({
   draw: function() {
     var canvas = this.refs.canvas.getDOMNode(),
         context = canvas.getContext("2d");
-    context.fillStyle = '#000'
+
+    context.fillStyle = '#000';
     context.fillRect(0, 0, canvas.width, canvas.height);
+    context.fillStyle = '#fff';
 
     for (var i = 0; i < this.props.display.length; i++) {
       for (var j = 0; j < this.props.display[i].length; j++) {
-        context.fillStyle = this.props.display[i][j] ? "#fff" : "#000";
-        context.fillRect(i * this.xScale, j * this.yScale, this.xScale, this.yScale);
+        if (this.props.display[i][j]) {
+          context.fillRect(i * this.xScale, j * this.yScale, this.xScale, this.yScale);
+        }
       }
     }
   }
